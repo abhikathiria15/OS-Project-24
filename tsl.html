@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSL Mechanism</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: left;
+            margin-right: 20px;
+        }
+
+        #user_inp {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            margin: 15px auto;
+            float: left;
+
+        }
+
+        #user_inp>input {
+            margin-top: 5px;
+            text-align: center;
+            border-radius: 0px;
+        }
+
+        #user_inp>button {
+            margin: auto;
+            margin-top: 5px;
+            border-radius: 0px;
+            width: 20%;
+            border-left: 7px;
+        }
+
+        .ent-section {
+
+            margin: 15px;
+            float: left;
+            border-bottom: 2px solid;
+            transition: border-bottom 0.4s;
+        }
+
+        .ent-items {
+            float: left;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 0.4s;
+        }
+
+        .cs-section {
+            float: left;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 0.4s;
+        }
+
+        .ext-section {
+            float: left;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 0.4s;
+        }
+
+        .lockvariable {
+            border: 3px solid;
+            border-bottom: 2px solid;
+        }
+
+        #showEntry,
+        #showCritical,
+        #showExit,
+        #waiting-process {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body style="background-color:#3f3f3f; color: blanchedalmond;" class="text-center">
+
+    <div class="heading mt-4" style="margin-left: 45%;">
+        <h1>Test And Lock </h1>
+    </div>
+    <div class="container">
+        <div id="pro" style="border-top:5px groove rgb(131, 121, 121)">
+            <br>
+        </div>
+    </div>
+
+    <div class="container-fluid p-4" >
+        <div class="row">
+            <div id="user_inp">
+                <input type="text" name="process" id="p_no" placeholder="Number of processes">
+                <button class="btn btn-primary btn-sm" id="begin" style="color: #EFEF8F;">Start</button>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row" id="processes">
+                <div class="col-xl-3">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-left: 9%;">
+            <div class="col-xl-3"></div>
+            <div class="col-xl-8 col-6">
+
+                <div class="ent-section">
+                    <div class="p-4">
+                        <div id="entrysection" style="color: #EFEF8F;">
+                            Entry Section
+                        </div>
+                        <div class="btn btn-primary btn-sm px-1" id="showEntry"></div>
+                    </div>
+                </div>
+
+                <div class="cs-section">
+                    <div class="p-4" style="color: #EFEF8F;">
+                        Crititcal section
+                        <div class="btn btn-primary btn-sm px-1" id="showCritical"></div>
+                    </div>
+                </div>
+
+                <div class="ext-section">
+                    <div class="p-4" style="color: #EFEF8F;">
+                        Exit Section
+                        <div class="btn btn-primary btn-sm px-1" id="showExit"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 pt-4">
+        <div class="row">
+            <div class="col-4">
+            </div>
+            <div class="col-3">
+                <div class="lockvariable">
+                    <div class="text-center" style="color: #EFEF8F;"> 
+                        Lock Variable
+
+                        <h6>Lock Value = <span id="svalue"></span></h6>
+
+                        <div style="border-bottom: 1px solid; padding: 5px;"></div>
+
+                        <div>
+                            <p>Process in Waiting Queue</p>
+                            <div class="btn btn-primary btn-sm px-1" id="waiting-process">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#showEntry, #showCritical, #showExit, #waiting-process").css("display", "none");
+            $("#begin").click(function () {
+                let entry = [];
+                let critical = [];
+                let exit = [];
+                let queue = [];
+                let lock = 0;
+                let process = '';
+                let p_no = $("#p_no").val();
+                for (let i = 0; i < p_no; i++) {
+                    process += '<button class="btn btn-primary btn-sm col-lg-2" id="process' + i + '">Process ' + i + '</button><br>'
+                }
+                $("#processes").html(process);
+                $('#waiting-process').text(queue);
+                $('#svalue').text(lock);
+                for (let i = 0; i < p_no; i++) {
+                    $('#process' + i).click(function (e) {
+                        e.preventDefault();
+                        runProcess('Process ' + i);
+                    });
+                }
+
+                function runProcess(msg) {
+                    let no = parseInt(msg[8]);
+                    $('#process' + no).hide();
+                    $('#svalue').text(lock);
+                    $('#entrysection').text('Testing...');
+                    entry.push(msg);
+                    $('#showEntry').css('display', 'block');
+                    $('#showEntry').text(entry);
+                    $('#svalue').text(lock);
+                    if (lock == 0) {
+                        lock = 1;
+                        $('#svalue').text(lock);
+                        setTimeout(() => {
+                            $('#entrysection').text('Entry Section');
+                            entry = $.grep(entry, function (value) {
+                                return value != msg;
+                            });
+                            if (entry.length == 0) {
+                                $('#showEntry').css('display', 'none');
+                            }
+                            $('#showEntry').text(entry);
+                            critical.push(msg);
+                            $('#showCritical').css('display', 'block');
+                            $('#showCritical').text(critical);
+                            setTimeout(() => {
+                                critical = $.grep(critical, function (value) {
+                                    return value != msg;
+                                });
+                                if (critical.length == 0) {
+                                    $('#showCritical').css('display', 'none');
+                                }
+                                $('#showCritical').text(critical);
+                                exit.push(msg);
+                                $('#showExit').css('display', 'block');
+                                $('#showExit').text(exit);
+                                setTimeout(() => {
+                                    exit = $.grep(exit, function (value) {
+                                        return value != msg;
+                                    });
+                                    if (exit.length == 0) {
+                                        $('#showExit').css('display', 'none');
+                                    }
+                                    $('#showExit').text(exit);
+                                    lock = 0;
+                                    $('#svalue').text(lock);
+                                    if (queue.length != 0) {
+                                        let new_process = queue.shift()
+                                        if (queue.length == 0) {
+                                            $('#waiting-process').css('display', 'none');
+                                        }
+                                        $('#waiting-process').text(queue);
+                                        runProcess(new_process);
+                                    } else {
+                                        $('#waiting-process').css('display', 'none');
+                                    }
+                                }, 3000);
+                            }, 3000);
+                        }, 3000);
+                    } else {
+                        setTimeout(() => {
+                            $('#entrysection').text('Entry Section');
+                            entry = $.grep(entry, function (value) {
+                                return value != msg;
+                            });
+                            if (entry.length == 0) {
+                                $('#showEntry').css('display', 'none');
+                            }
+                            $('#showEntry').text(entry);
+                            queue.push(msg);
+                            $('#waiting-process').css('display', 'block');
+                            $('#waiting-process').text(queue);
+                        }, 1500);
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

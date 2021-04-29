@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn Variable</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: left;
+            border-right: 20px;
+        }
+        
+        .ent-section {
+            float: left;
+            border-bottom: 3px;
+            margin: 20px;
+            border-radius: 0px;
+            border-bottom: 2px solid ;
+            transition: border-bottom 2s;
+        }
+
+        .cs-section {
+            float: left;
+            margin: 20px;
+            border-radius: 0px;
+            border-bottom: 2px solid ;
+            transition: border-bottom 0.4s;
+        }
+
+        .ext-section {
+            float: left;
+            margin: 20px;
+            border-radius: 0px;
+            border-bottom: 2px solid ;
+            transition: border-bottom 0.4s;
+        }
+
+
+        .turnvariable {
+            float: center;
+            border-bottom: 2px solid ;
+            transition: border-bottom 0.4s;
+        }
+
+        #showEntry,
+        #showCritical,
+        #showExit {
+            width: 10vw;
+        }
+    </style>
+</head>
+
+<body style="background-color:#3f3f3f; color: blanchedalmond;">
+        <div class="heading mt-4">
+            <h1 style="margin-left: 45%;">Turn Variable</h1>
+        </div>
+    <div class="container">
+        <div id="pro" style="border-top:5px groove rgb(131, 121, 121)">
+            <br>
+        </div>
+    </div>
+
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-xl-5 col-4"></div>
+            <div class="col-xl-4 col-4; color: #EFEF8F;">
+                <button class="btn btn-primary btn-sm" id="process1">
+                    Process I
+                </button>
+                <button class="btn btn-primary btn-sm" id="process2">
+                    Process J
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-4 col-4"></div>
+            <div class="col-xl-6 col-6">
+
+                <div class="ent-section">
+                    <div class="p-4">
+                        <div style="color: #EFEF8F;">Entry Section</div>
+                        <div class="btn btn-primary btn-sm px-1" id="showEntry"></div>
+                    </div>
+                </div>
+
+                <div class="cs-section">
+                    <div class="p-4">
+                        <div style="color: #EFEF8F;">Crititcal section</div>
+                        <div class="btn btn-primary btn-sm px-1" id="showCritical"></div>
+                    </div>
+                </div>
+
+                <div class="ext-section">
+                    <div class="p-4">
+                        <div style="color: #EFEF8F;">Exit Section</div>
+                        <div class="btn btn-primary btn-sm px-1" id="showExit"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 pt-4">
+        <div class="row">
+            <div class="col-4">
+
+            </div>
+            <div class="col-3">
+                <div class="turnvariable">
+                    <div class="text-center" style="color: #EFEF8F;">
+                        Turn Variable
+                        <br>
+                        Turn Variable value = <span id="turn"></span>
+
+                        <div style="border-bottom: 1px solid; padding: 5px;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#showEntry, #showCritical, #showExit").css("display", "none");
+            let turn = 'I';
+            let queue = 'EMPTY';
+            $('#turn').text(turn);
+
+            $('#process1').click(function (e) {
+                e.preventDefault();
+                runProcess('Process I');
+            });
+
+            $('#process2').click(function (e) {
+                e.preventDefault();
+                runProcess('Process J');
+            });
+
+            function runProcess(msg) {
+                process = msg[8];
+                if (msg === 'Process I') {
+                    $('#process1').hide();
+                } else if (msg === 'Process J') {
+                    $('#process2').hide();
+                }
+                if (process === turn) {
+                    $('#showEntry').css('display', 'block');
+                    $('#showEntry').text(msg);
+                    setTimeout(() => {
+                        $('#showEntry').css('display', 'none');
+                        $('#showEntry').text('');
+                        $('#showCritical').css('display', 'block');
+                        $('#showCritical').text(msg);
+                        setTimeout(() => {
+                            $('#showCritical').css('display', 'none');
+                            $('#showCritical').text('');
+                            $('#showExit').css('display', 'block');
+                            $('#showExit').text(msg);
+                            setTimeout(() => {
+                                $('#showExit').css('display', 'none');
+                                $('#showExit').text('');
+                                // $('#showCritical').text('');
+                                if (turn == 'I') {
+                                    turn = 'J';
+                                } else {
+                                    turn = 'I';
+                                }
+                                $('#turn').text(turn);
+                                if (queue !== 'EMPTY') {
+                                    if (queue === 'Process I') {
+                                        // $('#blocked-process').text('');
+                                        runProcess('Process I');
+                                        queue = 'EMPTY';
+                                    } else if (queue === 'Process J') {
+                                        // $('#blocked-process').text('');
+                                        runProcess('Process J');
+                                        queue = 'EMPTY';
+                                    }
+                                    // $('#blocked-process').text(queue);
+                                }
+                            }, 2000);
+                        }, 5000);
+                    }, 1000);
+                } else {
+                    queue = msg;
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

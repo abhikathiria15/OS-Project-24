@@ -1,0 +1,140 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Producer-Consumer model</title>
+  <meta name="description" content="Producer-Consumer problem visualization">
+  <meta name="author" content="Ivan Velichko <iximiuz at gmail.com>">
+
+  <link rel="stylesheet" href="ProducerConsumer.css">
+   <style>
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #user_inp {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            margin: 15px auto;
+            float: center;
+            text-align: left;
+        }
+
+        #user_inp>input {
+            margin-top: 5px;
+            text-align: center;
+            border-radius: 0px;
+            float: left;
+        }
+
+        #user_inp>button {
+            margin: auto;
+            margin-top: 5px;
+            border-radius: 0px;
+            width: 40%;
+            float: left;
+            align-content: center;
+        }
+
+        .ent-section {
+            float: left;
+            text-align: center;
+            margin: 15px;
+            border-radius: 0px;
+            /* border: 3px solid #000; */
+        }
+
+        .ent-items {
+            float: center;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 5s;
+        }
+
+        .cs-section {
+            float: left;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 5s;
+        }
+
+        .ext-section {
+            float: left;
+            margin: 15px;
+            border-radius: 0px;
+            border-bottom: 2px solid;
+            transition: border-bottom 5s;
+        }
+
+        .lockvariable {}
+
+        #TestLock,
+        #SetLock,
+        #showCritical,
+        #showExit {
+            width: 10vw;
+        }
+		
+    </style>
+</head>
+
+<body style="background-color:#3f3f3f; color: blanchedalmond;" class="text-center"> 
+ 
+    <div class="heading row">
+        <center><h1 style="font-weight: 300; font-size: 2.5rem;margin-bottom: .5rem;line-height: 1.2;font-family: "Roboto",sans-serif;">Producer Consumer</h1></center>
+    </div>
+	
+	<div class="container">
+        <div id="pro" style="border-top:5px groove rgb(131, 121, 121); width:74%; margin-left:210px">
+            <br>
+        </div>
+    </div>
+	<div class="row " >
+    <center><table class = "center">
+      
+      <tr>
+        <td>Produce chunks</td>
+        <td><input id="chunks-count" type="number" min="1" class="form-control form-control-sm"></td>
+      </tr>
+
+         <tr>
+        <td>Queue capacity</td>
+        <td><input id="queue-cap" type="number" min="1" max="6" class="form-control form-control-sm"></td>
+      </tr>
+
+  
+      <tr>
+        <td>
+          <button id="options-apply" class="btn btn-primary btn-sm">APPLY</button> 
+          <button onclick="window.location.reload()" class="btn btn-primary btn-sm" id="reset">RESET</button>
+     
+        </td>
+      </tr>
+   
+          <a href="javascript: void 0" id="preset-fpsc" class="btn-preset"></a>  
+		  <a href="javascript: void 0" id="preset-spfc" class="btn-preset"></a>  
+		  <a href="javascript: void 0" id="preset-random" class="btn-preset"></a>
+        </td>
+      </tr>
+    </table></center>	
+     
+    
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script src="ProducerConsumer.js"></script>
+  <script src="ProducerConsumer1.js"></script>
+</body>
+</html>
+
